@@ -1,0 +1,436 @@
+{
+  "characters": [
+    {
+      "id": "c_lang",
+      "name": { "en": "C", "jp": "C言語" },
+      "type": "Low-level / Attacker",
+      "description": {
+        "en": "A powerful physical attacker that interacts directly with hardware. High risk, high return.",
+        "jp": "ハードウェアを直接操作する物理アタッカー。高リスク・高リターンな性能。"
+      },
+      "stats": {
+        "hp": 80,
+        "physical_atk": 95,
+        "logic_atk": 20,
+        "speed": 60,
+        "build_time": 85,
+        "robustness": 30,
+        "memory_management": 20
+      },
+      "special_move": {
+        "name": { "en": "Kernel Panic", "jp": "カーネルパニック" },
+        "effect": "Rewrites the system coordinates of enemies, forcing them out of bounds."
+      }
+    },
+    {
+      "id": "assembly",
+      "name": { "en": "Assembly", "jp": "アセンブリ" },
+      "type": "Ultra Low-level / Glass Cannon",
+      "description": {
+        "en": "The foundation of all languages. Extremely difficult to control but possesses absolute power.",
+        "jp": "全ての言語の根源。制御は極めて困難だが、絶対的な破壊力を持つ。"
+      },
+      "stats": {
+        "hp": 40,
+        "physical_atk": 100,
+        "logic_atk": 10,
+        "speed": 90,
+        "build_time": 95,
+        "robustness": 10,
+        "memory_management": 10
+      },
+      "special_move": {
+        "name": { "en": "Direct Register Access", "jp": "レジスタ直接アクセス" },
+        "effect": "Instantly teleports to the enemy's CPU address and delivers a fatal blow."
+      }
+    },
+    {
+      "id": "cpp",
+      "name": { "en": "C++", "jp": "C++" },
+      "type": "Mid-level / Versatile Tank",
+      "description": {
+        "en": "Balanced with both physical power and complex class-based logic.",
+        "jp": "物理的な破壊力と、クラスに基づいた複雑な論理攻撃を兼ね備える。"
+      },
+      "stats": {
+        "hp": 85,
+        "physical_atk": 75,
+        "logic_atk": 60,
+        "speed": 50,
+        "build_time": 90,
+        "robustness": 40,
+        "memory_management": 40
+      },
+      "special_move": {
+        "name": { "en": "Multi-Inheritance Smash", "jp": "多重継承スマッシュ" },
+        "effect": "Combines traits of multiple classes into one massive physical strike."
+      }
+    },
+    {
+      "id": "rust",
+      "name": { "en": "Rust", "jp": "Rust" },
+      "type": "Low-level / Defender",
+      "description": {
+        "en": "Features an iron-clad defense by the 'Borrow Checker'. Almost no bugs.",
+        "jp": "「所有権」による鉄壁の防御を誇る。バグモードに対して非常に強い。"
+      },
+      "stats": {
+        "hp": 75,
+        "physical_atk": 70,
+        "logic_atk": 50,
+        "speed": 65,
+        "build_time": 80,
+        "robustness": 100,
+        "memory_management": 100
+      },
+      "special_move": {
+        "name": { "en": "Borrow Checker Cage", "jp": "借用チェッカーの檻" },
+        "effect": "Traps enemies in a static memory area, preventing any movement."
+      }
+    },
+    {
+      "id": "python",
+      "name": { "en": "Python", "jp": "Python" },
+      "type": "High-level / Mage",
+      "description": {
+        "en": "Weak physical stats, but can unleash powerful logic spells instantly.",
+        "jp": "身体能力は低いが、強力なライブラリ魔法を即座に呼び出せる。"
+      },
+      "stats": {
+        "hp": 50,
+        "physical_atk": 20,
+        "logic_atk": 90,
+        "speed": 40,
+        "build_time": 15,
+        "robustness": 60,
+        "memory_management": 70
+      },
+      "special_move": {
+        "name": { "en": "Deep Learning Nova", "jp": "ディープラーニング・ノヴァ" },
+        "effect": "Deploys an AI that predicts and counters every enemy move."
+      }
+    },
+    {
+      "id": "javascript",
+      "name": { "en": "JavaScript", "jp": "JavaScript" },
+      "type": "High-level / Trickster",
+      "description": {
+        "en": "Uses asynchronous attacks and event loops to confuse opponents.",
+        "jp": "非同期攻撃とイベントループで相手を翻弄するトリッキーな言語。"
+      },
+      "stats": {
+        "hp": 55,
+        "physical_atk": 30,
+        "logic_atk": 75,
+        "speed": 85,
+        "build_time": 10,
+        "robustness": 20,
+        "memory_management": 60
+      },
+      "special_move": {
+        "name": { "en": "Callback Hell", "jp": "コールバック地獄" },
+        "effect": "Forces the enemy into an infinite loop of delayed actions."
+      }
+    },
+    {
+      "id": "java",
+      "name": { "en": "Java", "jp": "Java" },
+      "type": "High-level / Standardist",
+      "description": {
+        "en": "The standard of enterprise. High HP and stable performance across all fields.",
+        "jp": "エンタープライズの標準。高い耐久力と安定した性能を持つ万能型。"
+      },
+      "stats": {
+        "hp": 90,
+        "physical_atk": 50,
+        "logic_atk": 60,
+        "speed": 45,
+        "build_time": 70,
+        "robustness": 80,
+        "memory_management": 85
+      },
+      "special_move": {
+        "name": { "en": "Garbage Collection Blast", "jp": "ガベージコレクション・ブラスト" },
+        "effect": "Purges all objects on screen, clearing enemy projectiles and damaging them."
+      }
+    },
+    {
+      "id": "go",
+      "name": { "en": "Go", "jp": "Go" },
+      "type": "Mid-level / Speedster",
+      "description": {
+        "en": "Specializes in high concurrency. Can attack with multiple 'Goroutines' simultaneously.",
+        "jp": "並行処理に特化。複数の「Goroutine（分身）」で同時攻撃を仕掛ける。"
+      },
+      "stats": {
+        "hp": 65,
+        "physical_atk": 60,
+        "logic_atk": 65,
+        "speed": 95,
+        "build_time": 20,
+        "robustness": 75,
+        "memory_management": 80
+      },
+      "special_move": {
+        "name": { "en": "Massive Concurrency", "jp": "超並行・多重プッシュ" },
+        "effect": "Creates dozens of clones to push all enemies into the GitHub sea at once."
+      }
+    },
+    {
+      "id": "haskell",
+      "name": { "en": "Haskell", "jp": "Haskell" },
+      "type": "High-level / Tactician",
+      "description": {
+        "en": "A functional language that fights with pure logic. Hard to understand but flawless.",
+        "jp": "純粋関数型の論理を武器に戦う。理解は難しいが、完璧な立ち回りが可能。"
+      },
+      "stats": {
+        "hp": 45,
+        "physical_atk": 10,
+        "logic_atk": 95,
+        "speed": 55,
+        "build_time": 60,
+        "robustness": 100,
+        "memory_management": 90
+      },
+      "special_move": {
+        "name": { "en": "Monad Singularity", "jp": "モナドの特異点" },
+        "effect": "Alters the world's state, making the enemy's existence 'Nothing'."
+      }
+    },
+    {
+      "id": "swift",
+      "name": { "en": "Swift", "jp": "Swift" },
+      "type": "High-level / Agile",
+      "description": {
+        "en": "Highly optimized for mobile combat. Fast, sleek, and safe.",
+        "jp": "モバイル戦闘に最適化された言語。高速で洗練されたコンボが得意。"
+      },
+      "stats": {
+        "hp": 60,
+        "physical_atk": 55,
+        "logic_atk": 70,
+        "speed": 80,
+        "build_time": 50,
+        "robustness": 85,
+        "memory_management": 75
+      },
+      "special_move": {
+        "name": { "en": "Optional Unwrapping", "jp": "オプショナル・アンラップ" },
+        "effect": "Forcibly reveals the enemy's hidden weak points and strikes them."
+      }
+    },
+    {
+      "id": "ruby",
+      "name": { "en": "Ruby", "jp": "Ruby" },
+      "type": "High-level / Artist",
+      "description": {
+        "en": "An expressive language that prioritizes programmer happiness. Can alter rules beautifully.",
+        "jp": "プログラマの幸福を追求する表現豊かな言語。美しくルールを書き換える。"
+      },
+      "stats": {
+        "hp": 50,
+        "physical_atk": 35,
+        "logic_atk": 80,
+        "speed": 60,
+        "build_time": 15,
+        "robustness": 40,
+        "memory_management": 65
+      },
+      "special_move": {
+        "name": { "en": "Metaprogramming Magic", "jp": "メタプログラミング・マジック" },
+        "effect": "Dynamically changes its own attack type to the enemy's weakest resistance."
+      }
+    },
+    {
+      "id": "kotlin",
+      "name": { "en": "Kotlin", "jp": "Kotlin" },
+      "type": "High-level / Tactical Balanced",
+      "description": {
+        "en": "Modern and expressive with strict null safety. Highly compatible with Java.",
+        "jp": "厳格なNull安全を持つモダンな言語。Javaとの高い互換性と洗練された能力を持つ。"
+      },
+      "stats": {
+        "hp": 75,
+        "physical_atk": 50,
+        "logic_atk": 70,
+        "speed": 70,
+        "build_time": 45,
+        "robustness": 90,
+        "memory_management": 80
+      },
+      "special_move": {
+        "name": { "en": "Null Safety Shield", "jp": "Null安全シールド" },
+        "effect": "Becomes immune to all 'Null' based attacks and gains temporary invincibility."
+      }
+    },
+    {
+      "id": "typescript",
+      "name": { "en": "TypeScript", "jp": "TypeScript" },
+      "type": "High-level / Defensive Trickster",
+      "description": {
+        "en": "Adds static typing to JavaScript. Predicts and blocks runtime errors.",
+        "jp": "JSに静的型付けを追加。実行時エラーを予見して未然に防ぐ防御的トリックスター。"
+      },
+      "stats": {
+        "hp": 55,
+        "physical_atk": 30,
+        "logic_atk": 80,
+        "speed": 80,
+        "build_time": 25,
+        "robustness": 85,
+        "memory_management": 65
+      },
+      "special_move": {
+        "name": { "en": "Static Type Definition", "jp": "静的型定義" },
+        "effect": "Forces the enemy into a specific 'Interface', restricting their available moves."
+      }
+    },
+    {
+      "id": "csharp",
+      "name": { "en": "C#", "jp": "C#" },
+      "type": "Mid-level / Power Tank",
+      "description": {
+        "en": "Versatile and powerful. Uses LINQ to process multiple enemies at once.",
+        "jp": "多機能で強力。LINQを駆使して複数の敵を同時に処理するパワー型。"
+      },
+      "stats": {
+        "hp": 85,
+        "physical_atk": 65,
+        "logic_atk": 70,
+        "speed": 50,
+        "build_time": 75,
+        "robustness": 80,
+        "memory_management": 75
+      },
+      "special_move": {
+        "name": { "en": "LINQ Query Blast", "jp": "LINQクエリ・ブラスト" },
+        "effect": "Queries all enemies in range and delivers a simultaneous calculated strike."
+      }
+    },
+    {
+      "id": "lua",
+      "name": { "en": "Lua", "jp": "Lua" },
+      "type": "High-level / Scout",
+      "description": {
+        "en": "Extremely lightweight and fast. Specializes in rapid movement and embedding.",
+        "jp": "極めて軽量で高速。素早い動きと、他の環境への潜り込み（組み込み）が得意。"
+      },
+      "stats": {
+        "hp": 40,
+        "physical_atk": 40,
+        "logic_atk": 60,
+        "speed": 100,
+        "build_time": 5,
+        "robustness": 50,
+        "memory_management": 70
+      },
+      "special_move": {
+        "name": { "en": "Table Injection", "jp": "テーブル・インジェクション" },
+        "effect": "Injects random tables into the stage, creating unexpected obstacles or buffs."
+      }
+    },
+    {
+      "id": "dart",
+      "name": { "en": "Dart", "jp": "Dart" },
+      "type": "High-level / UI Fighter",
+      "description": {
+        "en": "Optimized for smooth UI and fast development with 'Hot Reload'.",
+        "jp": "スムーズな操作感に最適化された言語。ホットリロードで即座に状況を立て直す。"
+      },
+      "stats": {
+        "hp": 60,
+        "physical_atk": 45,
+        "logic_atk": 75,
+        "speed": 85,
+        "build_time": 20,
+        "robustness": 70,
+        "memory_management": 80
+      },
+      "special_move": {
+        "name": { "en": "Hot Reload", "jp": "ホットリロード" },
+        "effect": "Instantly resets all skill cooldowns and restores a portion of health."
+      }
+    }
+  ],
+  "sub_components": [
+    {
+      "id": "bash",
+      "name": "bash",
+      "role": "Scout / Automator",
+      "description": {
+        "en": "A ninja-like companion that automates movement and chains attacks.",
+        "jp": "攻撃を自動で繋げたり、隠れた敵を見つける忍者的なスカウトユニット。"
+      },
+      "ability": {
+        "passive": "Pipe Chain: Reduces the delay between consecutive skill uses.",
+        "active": "Grep Scan: Reveals invisible items or traps in the stage."
+      }
+    },
+    {
+      "id": "powershell",
+      "name": "PowerShell",
+      "role": "Heavy Utility / Enforcer",
+      "description": {
+        "en": "A powerful companion that manipulates objects and enforces strict rules.",
+        "jp": "オブジェクトを自在に操り、強力な権限で戦場を支配する支援ユニット。"
+      },
+      "ability": {
+        "passive": "Object Pipeline: Increases the damage of logic attacks by 15%.",
+        "active": "Execution Policy: Creates a temporary 'Forbidden' zone where enemies cannot jump."
+      }
+    },
+    {
+      "id": "cmd",
+      "name": "cmd",
+      "role": "Legacy Support",
+      "description": {
+        "en": "Simple but reliable companion from the old days. Specializes in basic automation.",
+        "jp": "古き良き時代のシンプルな相棒。基本的な連続動作（バッチ）の支援が得意。"
+      },
+      "ability": {
+        "passive": "Batch Execute: Grants a 10% speed boost after a successful push.",
+        "active": "Directory Map: Resets the character's position to the last safe ground."
+      }
+    },
+    {
+      "id": "sql",
+      "name": "SQL",
+      "role": "Data Manipulator",
+      "description": {
+        "en": "Summons and manipulates stage elements. Can find anything in the database.",
+        "jp": "ステージ内のオブジェクトを検索・操作する。地形そのものを操る魔術師。"
+      },
+      "ability": {
+        "passive": "Indexing: Increases the range of target-seeking attacks.",
+        "active": "DROP TABLE: Temporarily removes a section of the floor beneath the enemy."
+      }
+    },
+    {
+      "id": "html",
+      "name": "HTML",
+      "role": "Architect",
+      "description": {
+        "en": "Focuses on structure and defense. Builds the layout of the battle.",
+        "jp": "構造と防御に特化。戦場に壁や足場を構築し、有利なレイアウトを作る。"
+      },
+      "ability": {
+        "passive": "Responsive Design: Automatically adjusts defense power based on the opponent's type.",
+        "active": "Div Barrier: Places a solid wall that blocks physical projectiles for 3 seconds."
+      }
+    },
+    {
+      "id": "gui",
+      "name": "GUI",
+      "role": "Visual Assistant",
+      "description": {
+        "en": "Provides visual support and easier control through a friendly interface.",
+        "jp": "視覚的なサポートを提供し、難しい操作をマウスカーソルのように補助する。"
+      },
+      "ability": {
+        "passive": "Auto-Focus: Provides magnetic tracking for attacks (easier to hit).",
+        "active": "Window Mode: Becomes semi-transparent, dodging one incoming attack automatically."
+      }
+    }
+  ]
+}

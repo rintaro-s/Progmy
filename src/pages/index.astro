@@ -1,11 +1,59 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Progmy - Programming Language Battle Arena">
+  <main>
+    <div id="game-container"></div>
+    <noscript>
+      <div class="no-js-message">
+        <h1>JavaScript Required</h1>
+        <p>Please enable JavaScript to play Progmy.</p>
+      </div>
+    </noscript>
+  </main>
 </Layout>
+
+<style>
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+    margin: 0;
+    padding: 0;
+  }
+
+  #game-container {
+    width: 100%;
+    max-width: 1280px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .no-js-message {
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .no-js-message h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .no-js-message p {
+    font-size: 1rem;
+    color: #888;
+  }
+</style>
+
+<script>
+  import { initGame } from '../game/index';
+  
+  // Initialize game when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    initGame();
+  });
+</script>
