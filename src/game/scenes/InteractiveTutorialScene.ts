@@ -161,30 +161,32 @@ export class InteractiveTutorialScene extends Phaser.Scene {
     const dummyChar = characters.find(c => c.id !== playerChar.id) || characters[1];
     
     // Create player
-    this.player = new Fighter(
-      this, 
-      GAME_WIDTH / 2 - 100, 
-      450,
-      playerChar,
-      this.stickRenderer,
-      true
-    );
+    this.player = new Fighter({
+      scene: this,
+      x: GAME_WIDTH / 2 - 100,
+      y: 450,
+      character: playerChar,
+      subComponent: this.selectedSub,
+      isPlayer: true,
+      playerIndex: 0
+    });
     
     // Create training dummy
-    this.dummy = new Fighter(
-      this,
-      GAME_WIDTH / 2 + 100,
-      450,
-      dummyChar,
-      this.stickRenderer,
-      false
-    );
+    this.dummy = new Fighter({
+      scene: this,
+      x: GAME_WIDTH / 2 + 100,
+      y: 450,
+      character: dummyChar,
+      subComponent: undefined,
+      isPlayer: false,
+      playerIndex: 1
+    });
     
     // Dummy starts facing left
     this.dummy.facingRight = false;
     
     // Player label
-    const playerLabel = this.add.text(0, -60, 'YOU', {
+    this.add.text(GAME_WIDTH / 2 - 100, 380, 'YOU', {
       fontFamily: 'Courier New, monospace',
       fontSize: '14px',
       color: playerChar.color

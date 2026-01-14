@@ -371,35 +371,77 @@ export class CharacterSelectScene extends Phaser.Scene {
     // Subcomponent info (if in subcomponent phase)
     if (this.selectionPhase === 'subcomponent') {
       const sub = subComponents[this.selectedSubIndex];
-      const subNameText = this.add.text(0, -90, `Sub: ${sub.name}`, {
+      
+      // Background box for readability
+      const infoBg = this.add.graphics();
+      infoBg.fillStyle(0x000000, 0.8);
+      infoBg.fillRect(-150, -100, 300, 160);
+      infoBg.lineStyle(2, Phaser.Display.Color.HexStringToColor(sub.color).color, 1);
+      infoBg.strokeRect(-150, -100, 300, 160);
+      this.previewContainer.add(infoBg);
+      
+      const subNameText = this.add.text(0, -85, `[ ${sub.name} ]`, {
         fontFamily: 'Courier New, monospace',
-        fontSize: '14px',
-        color: sub.color
+        fontSize: '16px',
+        color: sub.color,
+        fontStyle: 'bold'
       }).setOrigin(0.5);
       this.previewContainer.add(subNameText);
       
-      const subDescText = this.add.text(0, -70, sub.description.en, {
+      const subRoleText = this.add.text(0, -65, sub.role, {
         fontFamily: 'Courier New, monospace',
-        fontSize: '10px',
-        color: '#aaaaaa',
+        fontSize: '12px',
+        color: '#ffff66'
+      }).setOrigin(0.5);
+      this.previewContainer.add(subRoleText);
+      
+      const subDescText = this.add.text(0, -48, sub.description.en, {
+        fontFamily: 'Courier New, monospace',
+        fontSize: '11px',
+        color: '#ffffff',
         align: 'center',
         wordWrap: { width: 280 }
       }).setOrigin(0.5);
       this.previewContainer.add(subDescText);
       
-      const passiveText = this.add.text(0, -35, `Passive: ${sub.ability.passive.name}`, {
+      const passiveText = this.add.text(-140, -15, `Passive: ${sub.ability.passive.name}`, {
         fontFamily: 'Courier New, monospace',
-        fontSize: '10px',
-        color: '#66ff66'
-      }).setOrigin(0.5);
+        fontSize: '11px',
+        color: '#66ff66',
+        fontStyle: 'bold'
+      });
       this.previewContainer.add(passiveText);
       
-      const activeText = this.add.text(0, -20, `Active: ${sub.ability.active.name}`, {
+      const passiveDescText = this.add.text(-140, 0, sub.ability.passive.description, {
         fontFamily: 'Courier New, monospace',
         fontSize: '10px',
-        color: '#66ccff'
-      }).setOrigin(0.5);
+        color: '#ccffcc',
+        wordWrap: { width: 270 }
+      });
+      this.previewContainer.add(passiveDescText);
+      
+      const activeText = this.add.text(-140, 25, `Active: ${sub.ability.active.name}`, {
+        fontFamily: 'Courier New, monospace',
+        fontSize: '11px',
+        color: '#66ccff',
+        fontStyle: 'bold'
+      });
       this.previewContainer.add(activeText);
+      
+      const activeDescText = this.add.text(-140, 40, sub.ability.active.description, {
+        fontFamily: 'Courier New, monospace',
+        fontSize: '10px',
+        color: '#ccddff',
+        wordWrap: { width: 270 }
+      });
+      this.previewContainer.add(activeDescText);
+      
+      const cooldownText = this.add.text(-140, 55, `Cooldown: ${(sub.ability.active.cooldown / 1000).toFixed(1)}s`, {
+        fontFamily: 'Courier New, monospace',
+        fontSize: '10px',
+        color: '#ffaa66'
+      });
+      this.previewContainer.add(cooldownText);
     }
 
     // Stats display

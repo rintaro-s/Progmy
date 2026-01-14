@@ -7,6 +7,8 @@ export class SettingsScene extends Phaser.Scene {
   private settings!: GameSettings;
   private menuItems: { text: Phaser.GameObjects.Text; key: keyof GameSettings; type: string }[] = [];
   private selectedIndex: number = 0;
+  private editingName: boolean = false;
+  private nameInputText?: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'SettingsScene' });
@@ -30,7 +32,7 @@ export class SettingsScene extends Phaser.Scene {
 
     // Instructions
     this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 60, 
-      '↑↓ : Navigate    ← → : Change Value    Enter : Save & Back    Esc : Cancel', {
+      '↑↓ : Navigate    ← → : Change Value    Space : Edit Name    Enter : Save & Back    Esc : Cancel', {
       fontFamily: 'Courier New, monospace',
       fontSize: '14px',
       color: '#555555'
@@ -95,16 +97,62 @@ export class SettingsScene extends Phaser.Scene {
   private setupInput(): void {
     const keyboard = this.input.keyboard!;
 
-    keyboard.on('keydown-UP', () => this.moveSelection(-1));
-    keyboard.on('keydown-DOWN', () => this.moveSelection(1));
-    keyboard.on('keydown-W', () => this.moveSelection(-1));
-    keyboard.on('keydown-S', () => this.moveSelection(1));
-    keyboard.on('keydown-LEFT', () => this.changeValue(-1));
-    keyboard.on('keydown-RIGHT', () => this.changeValue(1));
-    keyboard.on('keydown-A', () => this.changeValue(-1));
-    keyboard.on('keydown-D', () => this.changeValue(1));
-    keyboard.on('keydown-ENTER', () => this.saveAndExit());
-    keyboard.on('keydown-ESC', () => this.cancel());
+    keyboard.on('keydown-UP', () => {
+      if (!this.editingName) this.moveSelection(-1);
+    });
+    keyboard.on('keydown-DOWN', () => {
+      if (!this.editingName) this.moveSelection(1);
+    });
+    keyboard.on('keydown-W', () => {
+      if (!this.editingName) this.moveSelection(-1);
+    });
+    keyboard.on('keydown-S', () => {
+      if (!this.editingName) this.moveSelection(1);
+    });
+    keyboard.on('keydown-LEFT', () => {
+      if (!this.editingName) this.changeValue(-1);
+    });
+    keyboard.on('keydown-RIGHT', () => {
+      if (!this.editingName) this.changeValue(1);
+    });
+    keyboard.on('keydown-A', () => {
+      if (!this.editingName) this.changeValue(-1);
+    });
+    keyboard.on('keydown-D', () => {
+      if (!this.editingName) this.changeValue(1);
+    });
+    keyboard.on('keydown-SPACE', () => {
+      if (this.menuItems[this.selectedIndex].type === 'string') {
+        this.startEditingName();
+      }
+    });
+    keyboard.on('keydown-ENTER', () => {
+      if (this.editingName) {
+        this.stopEditingName();
+      } else {
+        this.saveAndExit();
+      }
+    });
+    keyboard.on('keydown-ESC', () => {
+      if (this.editingName) {
+        this.stopEditingName();
+      } else {
+        this.cancel();
+      }
+    });
+    
+    // Handle text input when editing name
+    keyboard.on('keydown', (event: KeyboardEvent) => {
+      if (!this.editingName) return;
+      
+      if (event.key === 'Backspace') {
+        this.settings.playerName = this.settings.playerName.slice(0, -1);
+        this.updateDisplay();
+      } else if (event.key.length === 1 && this.settings.playerName.length < 12) {
+        this.settings.playerName += event.key;
+        this.updateDisplay();
+      }
+    });
   }
 
   private moveSelection(direction: number): void {
@@ -162,18 +210,32 @@ export class SettingsScene extends Phaser.Scene {
           displayValue = '|' + '█'.repeat(bars) + '░'.repeat(10 - bars) + `| ${percent}%`;
           break;
         case 'string':
-          displayValue = `"${value}"`;
+          if (this.editingName && index === this.selectedIndex) {
+            displayValue = `"${value}_"`;
+          } else {
+            displayValue = `"${value}"`;
+          }
           break;
       }
 
       item.text.setText(displayValue);
       
       if (index === this.selectedIndex) {
-        item.text.setStyle({ color: '#00ff00' });
+        item.text.setStyle({ color: this.editingName && item.type === 'string' ? '#ffff00' : '#00ff00' });
       } else {
         item.text.setStyle({ color: '#666666' });
       }
     });
+  }
+
+  private startEditingName(): void {
+    this.editingName = true;
+    this.updateDisplay();
+  }
+
+  private stopEditingName(): void {
+    this.editingName = false;
+    this.updateDisplay();
   }
 
   private saveAndExit(): void {

@@ -67,14 +67,23 @@ VIM mode has a -2 frame input bonus.
 
 ## Subcomponents
 
-| Name | Role | Ability |
-|------|------|---------|
-| bash | Scout / Automator | Reduces skill delay. Active: Speed boost. |
-| PowerShell | Heavy Utility | Increases logic attack. Active: Temporary invincibility. |
-| cmd | Legacy Support | Speed boost after push. Active: Freezes nearby enemies. |
-| SQL | Database / Query | Amplifies damage on weak enemies. Active: Damage amplifier. |
-| HTML | UI Specialist | Larger hit markers. Active: Visible hitboxes. |
-| GUI | Interface Master | Better feedback. Active: Slow motion field. |
+Subcomponents are companions that provide passive and active abilities to enhance your fighter.
+
+| Name | Role | Passive Effect | Active Ability |
+|------|------|----------------|----------------|
+| bash | Scout / Automator | Pipe Chain: Reduces skill cooldown by 20% | Grep Scan: Speed boost x1.3 for 3 seconds |
+| PowerShell | Heavy Utility | Object Pipeline: Increases logic attack by 15% | Execution Policy: Invincibility for 2 seconds |
+| cmd | Legacy Support | Batch Execute: 10% speed boost after successful KO | Directory Map: Reset position to last safe ground |
+| SQL | Data Manipulator | Indexing: Increases attack range by 25% | DROP TABLE: Speed & jump boost for 2.5 seconds |
+| HTML | Architect | Responsive Design: Adaptive defense based on opponent | Div Barrier: Creates solid wall for 3 seconds |
+| GUI | Visual Assistant | Auto-Focus: Magnetic tracking for easier hits | Window Mode: Semi-transparent dodge for 1.5s |
+
+### How Subcomponents Work
+
+- **Passive Effects**: Always active once selected
+- **Active Abilities**: Activated by pressing the C key
+- Each active ability has a cooldown period
+- Choose subcomponents that complement your character's playstyle
 
 ## Game Modes
 
@@ -151,3 +160,16 @@ MIT License
 ### 操作方法
 
 矢印キー、WASD、VIMの3つのモードから選択可能。VIMモードは入力フレーム短縮ボーナス付き。
+
+### サブコンポーネント詳細
+
+サブコンポーネントは戦闘を補助するパッシブ効果とアクティブ能力を提供します。
+
+- **bash**: パッシブ - Pipe Chain（スキルクールダウン20%短縮）/ アクティブ - Grep Scan（速度1.3倍、3秒）
+- **PowerShell**: パッシブ - Object Pipeline（論理攻撃15%増加）/ アクティブ - Execution Policy（無敵、2秒）
+- **cmd**: パッシブ - Batch Execute（KO成功後10%速度上昇）/ アクティブ - Directory Map（最後の安全な位置にリセット）
+- **SQL**: パッシブ - Indexing（攻撃範囲25%拡大）/ アクティブ - DROP TABLE（速度ジャンプ力アップ、2.5秒）
+- **HTML**: パッシブ - Responsive Design（相手タイプに応じた防御調整）/ アクティブ - Div Barrier（3秒間壁を設置）
+- **GUI**: パッシブ - Auto-Focus（自動追跡で命中率向上）/ アクティブ - Window Mode（半透明ドッジ、1.5秒）
+
+アクティブ能力はCキーで発動します。各能力にはクールダウンがあります。
