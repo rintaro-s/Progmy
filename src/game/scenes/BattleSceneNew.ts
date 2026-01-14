@@ -504,12 +504,12 @@ export class BattleScene extends Phaser.Scene {
       right: keyboard.addKey('L')
     };
     
-    // Action keys
+    // Action keys (WASD mode uses JKL, others use Z/X/C/V)
     this.actionKeys = {
       lightAttack: keyboard.addKey('Z'),
-      attackAlt: keyboard.addKey('SPACE'),
+      attackAlt: keyboard.addKey('J'),        // WASD mode: J for light attack
       mediumAttack: keyboard.addKey('X'),
-      heavyAttack: keyboard.addKey('SHIFT'),
+      heavyAttack: keyboard.addKey('K'),      // WASD mode: K for heavy attack
       subAbility: keyboard.addKey('C'),
       special: keyboard.addKey('V')
     };
@@ -595,8 +595,20 @@ export class BattleScene extends Phaser.Scene {
     const barHeight = 15;
     const barSpacing = 25;
     
+    // Get control mode for key display
+    const settings = loadSettings();
+    const mode = settings.controlMode;
+    
+    let lightKey = 'Z';
+    let heavyKey = 'SHIFT';
+    
+    if (mode === ControlMode.WASD) {
+      lightKey = 'J';
+      heavyKey = 'K';
+    }
+    
     // Light attack cooldown
-    this.add.text(barX, barY, 'Z Light', {
+    this.add.text(barX, barY, `${lightKey} Light`, {
       fontFamily: 'Courier New, monospace',
       fontSize: '12px',
       color: '#666666'
@@ -610,7 +622,7 @@ export class BattleScene extends Phaser.Scene {
     });
     
     // Heavy attack cooldown
-    this.add.text(barX, barY + barSpacing * 2, 'SHIFT Heavy', {
+    this.add.text(barX, barY + barSpacing * 2, `${heavyKey} Heavy`, {
       fontFamily: 'Courier New, monospace',
       fontSize: '12px',
       color: '#666666'

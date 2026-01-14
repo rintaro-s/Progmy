@@ -1,13 +1,16 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isGitHubPagesBuild = process.env.GITHUB_ACTIONS === 'true';
+const repoName = process.env.GITHUB_REPOSITORY?.split('/')?.[1];
+const repoOwner = process.env.GITHUB_REPOSITORY_OWNER;
 
 // https://astro.build/config
 export default defineConfig({
-  // For GitHub Pages deployment (only in production)
-  site: isProduction ? 'https://your-username.github.io' : undefined,
-  base: isProduction ? '/Progrmy' : '/',
+  // GitHub Pages (Project Pages) expects your site under /<repo>/
+  // Example: https://<owner>.github.io/<repo>/
+  site: isGitHubPagesBuild && repoOwner ? `https://${repoOwner}.github.io` : undefined,
+  base: isGitHubPagesBuild && repoName ? `/${repoName}` : '/',
   
   // Build output configuration
   build: {

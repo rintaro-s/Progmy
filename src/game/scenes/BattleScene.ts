@@ -305,12 +305,12 @@ export class BattleScene extends Phaser.Scene {
       right: keyboard.addKey('L')
     };
     
-    // Action keys
+    // Action keys (WASD mode uses JKL, others use Z/X/C)
     this.actionKeys = {
       attack: keyboard.addKey('Z'),
-      attackAlt: keyboard.addKey('SPACE'),
+      attackAlt: keyboard.addKey('J'),       // WASD mode: J for attack
       special: keyboard.addKey('X'),
-      specialAlt: keyboard.addKey('SHIFT'),
+      specialAlt: keyboard.addKey('K'),      // WASD mode: K for special
       subAbility: keyboard.addKey('C'),
       jump: keyboard.addKey('UP')
     };
@@ -496,7 +496,9 @@ export class BattleScene extends Phaser.Scene {
       this.player.moveRight();
     }
     
-    // Actions
+    // Actions - Mode-specific key handling
+    const useWasdAttackKeys = this.controlMode === ControlMode.WASD;
+    
     if (Phaser.Input.Keyboard.JustDown(this.actionKeys.attack) ||
         Phaser.Input.Keyboard.JustDown(this.actionKeys.attackAlt)) {
       this.player.attack();
