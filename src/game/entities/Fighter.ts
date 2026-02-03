@@ -67,6 +67,10 @@ export class Fighter extends Phaser.GameObjects.Container {
   private animState: 'idle' | 'walk' | 'jump' | 'fall' | 'attack' | 'hurt' | 'special' = 'idle';
   private animTimer: number = 0;
   
+  // Knockback reaction
+  public knockbackIntensity: number = 0;
+  public knockbackAngle: number = 0;
+  
   // Safe position for recovery
   public lastSafePosition: { x: number; y: number } = { x: 0, y: 0 };
   
@@ -171,106 +175,265 @@ export class Fighter extends Phaser.GameObjects.Container {
   private drawIdlePose(w: () => number, flip: number, scale: number): void {
     const breathOffset = Math.sin(this.animTimer * 3) * 2;
     
-    // Head
-    this.figureGraphics.strokeCircle(w(), -35 + breathOffset + w(), 12);
+    // Apply knockback lean if being knocked back
+    const leanAngle = this.knockbackIntensity * 0.3;
+    const bodyTilt = Math.cos(leanAngle) * 15;
+    const bodyLift = Math.sin(leanAngle) * 10;
+    
+    // Neck position
+    const neckX = w();
+    const neckY = -23 + breathOffset;
+    
+    // Head with neck
+    this.figureGraphics.lineBetween(neckX, neckY, w(), -30 + breathOffset + bodyLift);
+    this.figureGraphics.strokeCircle(w(), -35 + breathOffset + bodyLift + w(), 12);
     
     // Body
-    this.figureGraphics.lineBetween(w(), -23 + breathOffset, w(), 15 + w());
+    this.figureGraphics.lineBetween(neckX, neckY, bodyTilt + w(), 15 + w());
     
-    // Arms (slightly down)
-    this.figureGraphics.lineBetween(w(), -15 + breathOffset + w(), -18 * flip + w(), 8 + w());
-    this.figureGraphics.lineBetween(w(), -15 + breathOffset + w(), 18 * flip + w(), 8 + w());
+    // Left arm with elbow
+    const leftShoulderX = neckX;
+    const leftShoulderY = -15 + breathOffset;
+    const leftElbowX = -12 * flip + w();
+    const leftElbowY = -5 + w();
+    const leftHandX = -18 * flip + w();
+    const leftHandY = 8 + w();
+    this.figureGraphics.lineBetween(leftShoulderX, leftShoulderY, leftElbowX, leftElbowY);
+    this.figureGraphics.lineBetween(leftElbowX, leftElbowY, leftHandX, leftHandY);
     
-    // Legs
-    this.figureGraphics.lineBetween(w(), 15, -12 + w(), 45 + w());
-    this.figureGraphics.lineBetween(w(), 15, 12 + w(), 45 + w());
+    // Right arm with elbow
+    const rightShoulderX = neckX;
+    const rightShoulderY = -15 + breathOffset;
+    const rightElbowX = 12 * flip + w();
+    const rightElbowY = -5 + w();
+    const rightHandX = 18 * flip + w();
+    const rightHandY = 8 + w();
+    this.figureGraphics.lineBetween(rightShoulderX, rightShoulderY, rightElbowX, rightElbowY);
+    this.figureGraphics.lineBetween(rightElbowX, rightElbowY, rightHandX, rightHandY);
+    
+    // Left leg with knee
+    const leftHipX = bodyTilt + w();
+    const leftHipY = 15;
+    const leftKneeX = -8 + bodyTilt * 0.5 + w();
+    const leftKneeY = 30 + w();
+    const leftFootX = -12 + w();
+    const leftFootY = 45 + w();
+    this.figureGraphics.lineBetween(leftHipX, leftHipY, leftKneeX, leftKneeY);
+    this.figureGraphics.lineBetween(leftKneeX, leftKneeY, leftFootX, leftFootY);
+    
+    // Right leg with knee
+    const rightHipX = bodyTilt + w();
+    const rightHipY = 15;
+    const rightKneeX = 8 + bodyTilt * 0.5 + w();
+    const rightKneeY = 30 + w();
+    const rightFootX = 12 + w();
+    const rightFootY = 45 + w();
+    this.figureGraphics.lineBetween(rightHipX, rightHipY, rightKneeX, rightKneeY);
+    this.figureGraphics.lineBetween(rightKneeX, rightKneeY, rightFootX, rightFootY);
   }
 
   private drawWalkPose(w: () => number, flip: number, scale: number): void {
     const walkCycle = Math.sin(this.animTimer * 10);
+    const leanAngle = this.knockbackIntensity * 0.3;
+    const bodyTilt = Math.cos(leanAngle) * 3 * flip;
     
-    // Head
-    this.figureGraphics.strokeCircle(w(), -35 + w(), 12);
+    // Neck
+    const neckX = w();
+    const neckY = -23;
+    this.figureGraphics.lineBetween(neckX, neckY, w(), -30);
+    
+    // Head with bob
+    this.figureGraphics.strokeCircle(w(), -35 + Math.abs(walkCycle) * 1 + w(), 12);
     
     // Body (slight lean forward)
-    this.figureGraphics.lineBetween(w(), -23, 3 * flip + w(), 15 + w());
+    this.figureGraphics.lineBetween(neckX, neckY, bodyTilt + w(), 15 + w());
     
-    // Arms (swinging)
-    this.figureGraphics.lineBetween(w(), -15 + w(), (-15 - walkCycle * 10) * flip + w(), 5 + w());
-    this.figureGraphics.lineBetween(w(), -15 + w(), (15 + walkCycle * 10) * flip + w(), 5 + w());
+    // Left arm swinging with elbow
+    const leftElbowX = (-8 - walkCycle * 5) * flip + w();
+    const leftElbowY = -5 + walkCycle * 3 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), leftElbowX, leftElbowY);
+    this.figureGraphics.lineBetween(leftElbowX, leftElbowY, (-15 - walkCycle * 10) * flip + w(), 5 + w());
     
-    // Legs (walking)
-    this.figureGraphics.lineBetween(3 * flip + w(), 15, (-8 + walkCycle * 12) + w(), 45 + w());
-    this.figureGraphics.lineBetween(3 * flip + w(), 15, (8 - walkCycle * 12) + w(), 45 + w());
+    // Right arm swinging with elbow
+    const rightElbowX = (8 + walkCycle * 5) * flip + w();
+    const rightElbowY = -5 - walkCycle * 3 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), rightElbowX, rightElbowY);
+    this.figureGraphics.lineBetween(rightElbowX, rightElbowY, (15 + walkCycle * 10) * flip + w(), 5 + w());
+    
+    // Left leg walking with knee
+    const leftKneeX = bodyTilt + (-4 + walkCycle * 8) + w();
+    const leftKneeY = 30 + Math.abs(walkCycle) * 3 + w();
+    this.figureGraphics.lineBetween(bodyTilt + w(), 15, leftKneeX, leftKneeY);
+    this.figureGraphics.lineBetween(leftKneeX, leftKneeY, (-8 + walkCycle * 12) + w(), 45 + w());
+    
+    // Right leg walking with knee
+    const rightKneeX = bodyTilt + (4 - walkCycle * 8) + w();
+    const rightKneeY = 30 + Math.abs(walkCycle) * 3 + w();
+    this.figureGraphics.lineBetween(bodyTilt + w(), 15, rightKneeX, rightKneeY);
+    this.figureGraphics.lineBetween(rightKneeX, rightKneeY, (8 - walkCycle * 12) + w(), 45 + w());
   }
 
   private drawJumpPose(w: () => number, flip: number, scale: number): void {
+    const leanAngle = this.knockbackIntensity * 0.5;
+    const bodyTilt = Math.cos(leanAngle) * 8;
+    
+    // Neck
+    const neckX = w();
+    const neckY = -23;
+    this.figureGraphics.lineBetween(neckX, neckY, w(), -28);
+    
     // Head
     this.figureGraphics.strokeCircle(w(), -35 + w(), 12);
     
     // Body
-    this.figureGraphics.lineBetween(w(), -23, w(), 15 + w());
+    this.figureGraphics.lineBetween(neckX, neckY, bodyTilt + w(), 15 + w());
     
-    // Arms (raised up)
-    this.figureGraphics.lineBetween(w(), -15 + w(), -20 + w(), -25 + w());
-    this.figureGraphics.lineBetween(w(), -15 + w(), 20 + w(), -25 + w());
+    // Left arm raised with elbow
+    const leftElbowX = -12 + w();
+    const leftElbowY = -20 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), leftElbowX, leftElbowY);
+    this.figureGraphics.lineBetween(leftElbowX, leftElbowY, -20 + w(), -25 + w());
     
-    // Legs (tucked)
-    this.figureGraphics.lineBetween(w(), 15, -15 + w(), 30 + w());
-    this.figureGraphics.lineBetween(w(), 15, 15 + w(), 30 + w());
+    // Right arm raised with elbow
+    const rightElbowX = 12 + w();
+    const rightElbowY = -20 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), rightElbowX, rightElbowY);
+    this.figureGraphics.lineBetween(rightElbowX, rightElbowY, 20 + w(), -25 + w());
+    
+    // Left leg tucked with knee
+    const leftKneeX = bodyTilt - 10 + w();
+    const leftKneeY = 25 + w();
+    this.figureGraphics.lineBetween(bodyTilt + w(), 15, leftKneeX, leftKneeY);
+    this.figureGraphics.lineBetween(leftKneeX, leftKneeY, -15 + w(), 30 + w());
+    
+    // Right leg tucked with knee
+    const rightKneeX = bodyTilt + 10 + w();
+    const rightKneeY = 25 + w();
+    this.figureGraphics.lineBetween(bodyTilt + w(), 15, rightKneeX, rightKneeY);
+    this.figureGraphics.lineBetween(rightKneeX, rightKneeY, 15 + w(), 30 + w());
   }
 
   private drawFallPose(w: () => number, flip: number, scale: number): void {
+    const leanAngle = this.knockbackIntensity * 0.5;
+    const bodyTilt = Math.cos(leanAngle) * 5;
+    
+    // Neck
+    this.figureGraphics.lineBetween(w(), -23, w(), -28);
+    
     // Head
     this.figureGraphics.strokeCircle(w(), -35 + w(), 12);
     
     // Body
-    this.figureGraphics.lineBetween(w(), -23, w(), 15 + w());
+    this.figureGraphics.lineBetween(w(), -23, bodyTilt + w(), 15 + w());
     
-    // Arms (spread out)
-    this.figureGraphics.lineBetween(w(), -15 + w(), -25 + w(), -5 + w());
-    this.figureGraphics.lineBetween(w(), -15 + w(), 25 + w(), -5 + w());
+    // Left arm spread with elbow
+    const leftElbowX = -18 + w();
+    const leftElbowY = -10 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), leftElbowX, leftElbowY);
+    this.figureGraphics.lineBetween(leftElbowX, leftElbowY, -25 + w(), -5 + w());
     
-    // Legs (extended down)
-    this.figureGraphics.lineBetween(w(), 15, -10 + w(), 48 + w());
-    this.figureGraphics.lineBetween(w(), 15, 10 + w(), 48 + w());
+    // Right arm spread with elbow
+    const rightElbowX = 18 + w();
+    const rightElbowY = -10 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), rightElbowX, rightElbowY);
+    this.figureGraphics.lineBetween(rightElbowX, rightElbowY, 25 + w(), -5 + w());
+    
+    // Left leg extended with knee
+    const leftKneeX = bodyTilt - 7 + w();
+    const leftKneeY = 32 + w();
+    this.figureGraphics.lineBetween(bodyTilt + w(), 15, leftKneeX, leftKneeY);
+    this.figureGraphics.lineBetween(leftKneeX, leftKneeY, -10 + w(), 48 + w());
+    
+    // Right leg extended with knee
+    const rightKneeX = bodyTilt + 7 + w();
+    const rightKneeY = 32 + w();
+    this.figureGraphics.lineBetween(bodyTilt + w(), 15, rightKneeX, rightKneeY);
+    this.figureGraphics.lineBetween(rightKneeX, rightKneeY, 10 + w(), 48 + w());
   }
 
   private drawAttackPose(w: () => number, flip: number, scale: number): void {
+    const leanAngle = this.knockbackIntensity * 0.3;
+    const bodyTilt = Math.cos(leanAngle) * 5;
+    
+    // Neck
+    this.figureGraphics.lineBetween(w(), -23, w(), -28);
+    
     // Head
     this.figureGraphics.strokeCircle(w(), -35 + w(), 12);
     
     // Body (lean into attack)
-    this.figureGraphics.lineBetween(w(), -23, 5 * flip + w(), 15 + w());
+    this.figureGraphics.lineBetween(w(), -23, (5 + bodyTilt) * flip + w(), 15 + w());
     
-    // Front arm (punching forward)
-    this.figureGraphics.lineBetween(w(), -15 + w(), 35 * flip + w(), -10 + w());
-    // Back arm
-    this.figureGraphics.lineBetween(w(), -15 + w(), -15 * flip + w(), 5 + w());
+    // Front arm punching with elbow
+    const frontElbowX = 20 * flip + w();
+    const frontElbowY = -12 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), frontElbowX, frontElbowY);
+    this.figureGraphics.lineBetween(frontElbowX, frontElbowY, 35 * flip + w(), -10 + w());
     
-    // Legs (stance)
-    this.figureGraphics.lineBetween(5 * flip + w(), 15, (-5 + 15 * flip) + w(), 45 + w());
-    this.figureGraphics.lineBetween(5 * flip + w(), 15, (5 - 15 * flip) + w(), 45 + w());
+    // Back arm wound up with elbow
+    const backElbowX = -10 * flip + w();
+    const backElbowY = -10 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), backElbowX, backElbowY);
+    this.figureGraphics.lineBetween(backElbowX, backElbowY, -15 * flip + w(), 0 + w());
+    
+    // Front leg stable with knee
+    const frontKneeX = 8 * flip + w();
+    const frontKneeY = 30 + w();
+    this.figureGraphics.lineBetween((5 + bodyTilt) * flip + w(), 15, frontKneeX, frontKneeY);
+    this.figureGraphics.lineBetween(frontKneeX, frontKneeY, 12 * flip + w(), 45 + w());
+    
+    // Back leg braced with knee
+    const backKneeX = -10 * flip + w();
+    const backKneeY = 30 + w();
+    this.figureGraphics.lineBetween((5 + bodyTilt) * flip + w(), 15, backKneeX, backKneeY);
+    this.figureGraphics.lineBetween(backKneeX, backKneeY, -15 * flip + w(), 45 + w());
   }
 
   private drawHurtPose(w: () => number, flip: number, scale: number): void {
-    // Head (tilted back)
-    this.figureGraphics.strokeCircle(-5 * flip + w(), -33 + w(), 12);
+    // Dramatic knockback reaction based on intensity
+    const knockbackLean = this.knockbackIntensity * Math.PI * 0.5;
+    const bodyArch = Math.sin(knockbackLean) * 20;
+    const headBack = Math.cos(knockbackLean) * 10;
     
-    // Body (bent back)
-    this.figureGraphics.lineBetween(-3 * flip + w(), -21, -8 * flip + w(), 15 + w());
+    // Neck bent back
+    this.figureGraphics.lineBetween(w(), -23 + bodyArch * 0.3, -headBack + w(), -28 + bodyArch * 0.5);
     
-    // Arms (flailing)
-    this.figureGraphics.lineBetween(-3 * flip + w(), -13 + w(), -25 + w(), -20 + w());
-    this.figureGraphics.lineBetween(-3 * flip + w(), -13 + w(), 10 + w(), -15 + w());
+    // Head (tilted back dramatically)
+    this.figureGraphics.strokeCircle(-headBack - 5 * flip + w(), -33 + bodyArch * 0.6 + w(), 12);
     
-    // Legs
-    this.figureGraphics.lineBetween(-8 * flip + w(), 15, -15 + w(), 43 + w());
-    this.figureGraphics.lineBetween(-8 * flip + w(), 15, 5 + w(), 45 + w());
+    // Body (arched back from impact)
+    this.figureGraphics.lineBetween(w(), -23 + bodyArch * 0.3, -bodyArch * 0.8 - 8 * flip + w(), 15 + w());
+    
+    // Left arm flailing back with elbow
+    const leftElbowX = -bodyArch * 0.6 - 18 + w();
+    const leftElbowY = -13 + bodyArch * 0.4 + w();
+    this.figureGraphics.lineBetween(w(), -13 + bodyArch * 0.3 + w(), leftElbowX, leftElbowY);
+    this.figureGraphics.lineBetween(leftElbowX, leftElbowY, -25 - bodyArch * 0.4 + w(), -20 + bodyArch * 0.5 + w());
+    
+    // Right arm flailing with elbow
+    const rightElbowX = bodyArch * 0.3 + 7 + w();
+    const rightElbowY = -10 + bodyArch * 0.3 + w();
+    this.figureGraphics.lineBetween(w(), -13 + bodyArch * 0.3 + w(), rightElbowX, rightElbowY);
+    this.figureGraphics.lineBetween(rightElbowX, rightElbowY, 10 + bodyArch * 0.2 + w(), -15 + bodyArch * 0.4 + w());
+    
+    // Left leg pushed back with knee
+    const leftKneeX = -bodyArch * 0.5 - 10 + w();
+    const leftKneeY = 30 + w();
+    this.figureGraphics.lineBetween(-bodyArch * 0.8 - 8 * flip + w(), 15, leftKneeX, leftKneeY);
+    this.figureGraphics.lineBetween(leftKneeX, leftKneeY, -15 + w(), 43 + w());
+    
+    // Right leg bracing with knee
+    const rightKneeX = bodyArch * 0.3 + 3 + w();
+    const rightKneeY = 30 + w();
+    this.figureGraphics.lineBetween(-bodyArch * 0.8 - 8 * flip + w(), 15, rightKneeX, rightKneeY);
+    this.figureGraphics.lineBetween(rightKneeX, rightKneeY, 5 + w(), 45 + w());
   }
 
   private drawSpecialPose(w: () => number, flip: number, scale: number): void {
     const pulse = Math.sin(this.animTimer * 15) * 3;
+    
+    // Neck
+    this.figureGraphics.lineBetween(w(), -23, w(), -28);
     
     // Head (glowing effect)
     this.figureGraphics.strokeCircle(w(), -35 + w(), 12 + pulse);
@@ -278,9 +441,29 @@ export class Fighter extends Phaser.GameObjects.Container {
     // Body
     this.figureGraphics.lineBetween(w(), -23, w(), 15 + w());
     
-    // Arms (raised in power pose)
-    this.figureGraphics.lineBetween(w(), -15 + w(), -20 + w(), -30 + pulse + w());
-    this.figureGraphics.lineBetween(w(), -15 + w(), 20 + w(), -30 + pulse + w());
+    // Left arm raised power pose with elbow
+    const leftElbowX = -15 + w();
+    const leftElbowY = -22 + pulse * 0.5 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), leftElbowX, leftElbowY);
+    this.figureGraphics.lineBetween(leftElbowX, leftElbowY, -20 + w(), -30 + pulse + w());
+    
+    // Right arm raised power pose with elbow
+    const rightElbowX = 15 + w();
+    const rightElbowY = -22 + pulse * 0.5 + w();
+    this.figureGraphics.lineBetween(w(), -15 + w(), rightElbowX, rightElbowY);
+    this.figureGraphics.lineBetween(rightElbowX, rightElbowY, 20 + w(), -30 + pulse + w());
+    
+    // Left leg stable with knee
+    const leftKneeX = -8 + w();
+    const leftKneeY = 30 + w();
+    this.figureGraphics.lineBetween(w(), 15, leftKneeX, leftKneeY);
+    this.figureGraphics.lineBetween(leftKneeX, leftKneeY, -12 + w(), 45 + w());
+    
+    // Right leg stable with knee
+    const rightKneeX = 8 + w();
+    const rightKneeY = 30 + w();
+    this.figureGraphics.lineBetween(w(), 15, rightKneeX, rightKneeY);
+    this.figureGraphics.lineBetween(rightKneeX, rightKneeY, 12 + w(), 45 + w());
     
     // Power aura
     this.figureGraphics.lineStyle(2, Phaser.Display.Color.HexStringToColor(this.character.accentColor).color, 0.5);
@@ -523,6 +706,21 @@ export class Fighter extends Phaser.GameObjects.Container {
       knockbackY * knockbackMultiplier
     );
     
+    // Calculate knockback intensity for visual reaction (0-1 range, can exceed 1 for dramatic effect)
+    const velocityMagnitude = Math.sqrt(knockbackX * knockbackX + knockbackY * knockbackY);
+    this.knockbackIntensity = Math.min((velocityMagnitude * knockbackMultiplier) / 1000, 2);
+    this.knockbackAngle = Math.atan2(knockbackY, knockbackX);
+    
+    // Decay knockback intensity over time
+    const decayDuration = 800;
+    const startIntensity = this.knockbackIntensity;
+    this.scene.tweens.add({
+      targets: this,
+      knockbackIntensity: 0,
+      duration: decayDuration,
+      ease: 'Cubic.easeOut'
+    });
+    
     // Hitstun duration based on damage
     const hitstunDuration = Math.min(100 + this.damage * 2, 500);
     this.scene.time.delayedCall(hitstunDuration, () => {
@@ -538,6 +736,8 @@ export class Fighter extends Phaser.GameObjects.Container {
     this.isHitstun = false;
     this.isAttacking = false;
     this.isUsingSpecial = false;
+    this.knockbackIntensity = 0;
+    this.knockbackAngle = 0;
     this.hitTargets.clear();
     this.activeBugEffects = [];
   }

@@ -712,6 +712,13 @@ export class BattleScene extends Phaser.Scene {
     
     // Update all fighters
     this.allFighters.forEach(fighter => {
+      // Skip update if fighter is waiting to respawn
+      if (this.respawnTimers.has(fighter)) {
+        // Only update respawn timer
+        this.updateRespawnTimer(fighter, delta);
+        return;
+      }
+      
       // Update status effects
       this.statusSystem.update(fighter, delta);
       
@@ -721,11 +728,10 @@ export class BattleScene extends Phaser.Scene {
       // Update fighter
       fighter.update(delta);
       
-      // Check death boundary
-      this.checkDeathBoundary(fighter);
-      
-      // Update respawn timers
-      this.updateRespawnTimer(fighter, delta);
+      // Check death boundary only for active fighters
+      if (fighter.body.enable && fighter.visible) {
+        this.checkDeathBoundary(fighter);
+      }
     });
     
     // Update AI
@@ -942,6 +948,16 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private handleKO(fighter: Fighter): void {
+    // Prevent duplicate KO processing
+    if (this.respawnTimers.has(fighter)) {
+      return;
+    }
+    
+    // Prevent KO if fighter is already invisible/disabled (safety check)
+    if (!fighter.visible || !fighter.body.enable) {
+      return;
+    }
+    
     // Find last attacker
     const lastHit = this.lastAttackers.get(fighter);
     const killer = (lastHit && this.time.now - lastHit.time < 10000) ? lastHit.attacker : null;
@@ -949,7 +965,7 @@ export class BattleScene extends Phaser.Scene {
     // Record KO in score system
     this.scoreSystem.recordKO(fighter, killer);
     
-    // KO effect and sound
+    // KO effect and sound - use clamped position to prevent off-screen effects
     const color = Phaser.Display.Color.HexStringToColor(fighter.character.color).color;
     this.particleManager.createKOEffect(
       Math.max(50, Math.min(GAME_WIDTH - 50, fighter.x)),
@@ -957,6 +973,11 @@ export class BattleScene extends Phaser.Scene {
       color
     );
     this.playKOSE();
+    
+    // Immediately disable physics and hide to prevent further interactions
+    fighter.setVisible(false);
+    fighter.body.setEnable(false);
+    fighter.body.setVelocity(0, 0);
     
     // Decrement stocks
     fighter.loseStock();
@@ -967,8 +988,6 @@ export class BattleScene extends Phaser.Scene {
     // Start respawn timer
     if (fighter.stocks > 0) {
       this.respawnTimers.set(fighter, BattleScene.RESPAWN_DELAY);
-      fighter.setVisible(false);
-      fighter.body.setEnable(false);
     }
     
     // Clear last attacker
