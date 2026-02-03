@@ -163,6 +163,13 @@ export class MenuScene extends Phaser.Scene {
       this.menuItems.length
     );
     this.updateCursor();
+    
+    // Play selection sound
+    try {
+      this.sound.play('se_select', { volume: 0.3 });
+    } catch (e) {
+      // SE not available yet
+    }
   }
 
   private updateCursor(): void {
@@ -194,6 +201,13 @@ export class MenuScene extends Phaser.Scene {
     const selected = this.menuItems[this.selectedIndex];
     const targetScene = selected.getData('scene');
     const mode = selected.getData('mode');
+
+    // Play confirm sound
+    try {
+      this.sound.play('se_menu_select', { volume: 0.5 });
+    } catch (e) {
+      // SE not available
+    }
 
     // Flash effect
     this.cameras.main.flash(100, 0, 255, 0);

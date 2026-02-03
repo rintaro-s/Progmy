@@ -1,6 +1,6 @@
 # Progmy - Programming Language Battle Arena
 
-A chaotic PvP/PvE battle game where programming languages become stick figure fighters
+A chaotic PvE battle game where programming languages become stick figure fighters
 
 ![Progmy](https://img.shields.io/badge/Phaser.js-3.x-blue) ![Astro](https://img.shields.io/badge/Astro-5.x-orange) ![License](https://img.shields.io/badge/license-MIT-green)
 

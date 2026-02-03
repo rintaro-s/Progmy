@@ -53,6 +53,10 @@ export class BattleScene extends Phaser.Scene {
   private statusSystem!: StatusEffectSystem;
   private particleManager!: ParticleManager;
   
+  // Sound
+  private soundEnabled: boolean = true;
+  private sfxVolume: number = 0.5;
+  
   // UI
   private uiContainer!: Phaser.GameObjects.Container;
   private damageTexts: Map<Fighter, Phaser.GameObjects.Text> = new Map();
@@ -143,6 +147,11 @@ export class BattleScene extends Phaser.Scene {
     this.statusSystem = new StatusEffectSystem();
     this.particleManager = new ParticleManager(this);
     
+    // Load sound settings
+    const settings = loadSettings();
+    this.soundEnabled = settings.soundEnabled;
+    this.sfxVolume = settings.sfxVolume;
+    
     // Create stage
     this.createStage();
     
@@ -183,6 +192,7 @@ export class BattleScene extends Phaser.Scene {
           GAME_HEIGHT / 2, 
           this.countdownValue.toString()
         );
+        this.playCountdownSE();
         this.countdownValue--;
         this.time.delayedCall(1000, doCountdown);
       } else {
@@ -440,11 +450,12 @@ export class BattleScene extends Phaser.Scene {
     // Track last attacker for KO attribution
     this.lastAttackers.set(victim, { attacker, time: this.time.now });
     
-    // Hit effect
+    // Hit effect and sound
     const hitX = (attacker.x + victim.x) / 2;
     const hitY = (attacker.y + victim.y) / 2;
     const color = Phaser.Display.Color.HexStringToColor(attacker.character.color).color;
     this.particleManager.createHitEffect(hitX, hitY, color);
+    this.playHitSE();
     
     // Update combo
     if (attacker.isPlayer) {
@@ -878,6 +889,7 @@ export class BattleScene extends Phaser.Scene {
   private createSpecialEffect(fighter: Fighter): void {
     const color = Phaser.Display.Color.HexStringToColor(fighter.character.color).color;
     this.particleManager.createSpecialEffect(fighter.x, fighter.y, color);
+    this.playSpecialSE();
     
     // Special name popup
     const namePopup = this.add.text(fighter.x, fighter.y - 80, 
@@ -937,13 +949,14 @@ export class BattleScene extends Phaser.Scene {
     // Record KO in score system
     this.scoreSystem.recordKO(fighter, killer);
     
-    // KO effect - particle only, no camera flash
+    // KO effect and sound
     const color = Phaser.Display.Color.HexStringToColor(fighter.character.color).color;
     this.particleManager.createKOEffect(
       Math.max(50, Math.min(GAME_WIDTH - 50, fighter.x)),
       Math.max(50, Math.min(GAME_HEIGHT - 50, fighter.y)),
       color
     );
+    this.playKOSE();
     
     // Decrement stocks
     fighter.loseStock();
@@ -1348,4 +1361,36 @@ export class BattleScene extends Phaser.Scene {
       barrierZone.destroy();
     });
   }
+
+  // Sound effect utilities
+  private playSE(seKey: string, volume?: number): void {
+    if (!this.soundEnabled) return;
+    
+    const vol = volume ?? this.sfxVolume;
+    try {
+      this.sound.play(seKey, { volume: vol });
+    } catch (e) {
+      // SE play failed, continue without sound
+    }
+  }
+
+  private playHitSE(): void {
+    // Random hit sound for variety
+    const hitSounds = ['se_hit_1', 'se_hit_2', 'se_hit_3'];
+    const random = hitSounds[Math.floor(Math.random() * hitSounds.length)];
+    this.playSE(random, this.sfxVolume * 0.8);
+  }
+
+  private playSpecialSE(): void {
+    this.playSE('se_special', this.sfxVolume * 0.9);
+  }
+
+  private playKOSE(): void {
+    this.playSE('se_ko', this.sfxVolume);
+  }
+
+  private playCountdownSE(): void {
+    this.playSE('se_countdown', this.sfxVolume * 0.6);
+  }
 }
+

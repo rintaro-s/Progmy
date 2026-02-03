@@ -42,7 +42,16 @@ export class BootScene extends Phaser.Scene {
       percentText.destroy();
     });
 
-    // We'll generate all graphics programmatically, no external assets needed
+    // Load sound effects from kenney
+    this.load.audio('se_hit_1', 'kenney/kenney_impact-sounds/Audio/impactMetal_medium_000.ogg');
+    this.load.audio('se_hit_2', 'kenney/kenney_impact-sounds/Audio/impactMetal_medium_001.ogg');
+    this.load.audio('se_hit_3', 'kenney/kenney_impact-sounds/Audio/impactMetal_medium_002.ogg');
+    this.load.audio('se_special', 'kenney/kenney_interface-sounds/Audio/maximize_001.ogg');
+    this.load.audio('se_ko', 'kenney/kenney_impact-sounds/Audio/impactGlass_heavy_001.ogg');
+    this.load.audio('se_select', 'kenney/kenney_interface-sounds/Audio/select_001.ogg');
+    this.load.audio('se_countdown', 'kenney/kenney_interface-sounds/Audio/tick_001.ogg');
+    this.load.audio('se_menu_select', 'kenney/kenney_interface-sounds/Audio/click_001.ogg');
+    this.load.audio('se_error', 'kenney/kenney_interface-sounds/Audio/error_001.ogg');
   }
 
   create(): void {
